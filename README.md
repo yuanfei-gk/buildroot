@@ -69,6 +69,10 @@ When customizing Buildroot, one or more project-specific files need to be stored
 
 
 ## Run with Jtag on board
+   Preparation: 
+        Board's serail interface is supposed to be connected to PC/laptop;
+        Board's jtag interface is supposed to be connected to PC/laptop by jtag emulator(CKLink Lite).
+           
    1. start minicom to connect board's serial port
       - minicom -D /dev/ttyUSB0
    2. start DebugServerConsole
