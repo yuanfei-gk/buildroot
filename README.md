@@ -84,7 +84,7 @@ When customizing Buildroot, one or more project-specific files need to be stored
    3. make CONF=buildroot-config;  // buildroot-config can be found in 'configs' folder.
 
 ## How to get the reference board
-    We will provide C610 as reference board. Before you apply please simuated the case pass in qumu and send the log or screenshot to us.
+    We will provide C610 as reference board. Before you apply please simulate the case pass in qemu and send the log or screenshot to us.
     Everyone can apply from the url: ***
 
 ## Contact us
