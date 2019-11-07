@@ -34,73 +34,27 @@ When customizing Buildroot, one or more project-specific files need to be stored
               |--riscv-readme
               |--thead-linux-patch
         |--patches            
-        |--.gitlab-ci.yml     
         |--Makefile          
         |--README.md
- 
- 
- 
+     //below folder will be generated after compilation by 'make CONF=<buildroot-config>'
+        |--buildroot-ded3f9954f158b5d9cd08ae76749eade72fcca3a
+        |--dl
+        |--<buildroot-config>
+              |--build
+              |--host
+              |--images
+              |--staging
+              |--target
 
-## How to Quick Start for qemu run
-  1. download the necessary files
-      * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/raw/output/images/toolchain_<buildroot-config>_<buildroot-version>.tar.xz;
-      > e.g. wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/340600736/artifacts/raw/output/images/toolchain_thead_910_compat_5.1_glibc_br_defconfig_7fa42f523167ede26f2162d61337b513bcecf2df.tar.xz;
-  
-      * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/file/output/images/Image.xz
-      > e.g. 
-      wget -nc  https://gitlab.com/c-sky/buildroot/-/jobs/340600736/artifacts/file/output/images/Image.xz
-      
-      * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/raw/output/images/fw_jump.elf
-      > e.g. 
-      wget -nc  https://gitlab.com/c-sky/buildroot/-/jobs/340600736/artifacts/raw/output/images/fw_jump.elf
-      
-      * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/file/output/images/rootfs.ext2.xz
-      > e.g. 
-      wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/340600736/artifacts/file/output/images/rootfs.ext2.xz
-  
-  2. run in Qemu shell
-      * echo "Now let's run on qemu";
-      * mkdir host;
-      * tar -Jxf toolchain_<buildroot-config>_<buildroot-version>.tar.xz -C host;
-      * qemu_start_cmd;
-      > LD_LIBRARY_PATH=./host/lib ./host/bin/qemu-system-riscv64 -M virt -kernel fw_jump.elf -device loader,file=Image,addr=0x80200000 -append "rootwait root=/dev/vda ro" -drive file=rootfs.ext2,format=raw,id=hd0 -device virtio-blk-device,drive=hd0 -nographic -smp 4;  
-      > (PS. Login with username "root", and no password)
-
-  3. Enable qemu network    
-     * Please use sudo privilege, becasue qemu will setup tap device in your host
-     > sudo qemu_start_cmd -netdev tap,script=no,id=net0 -device virtio-net-device,netdev=net0;
-     e.g. 
-     sudo LD_LIBRARY_PATH=./host/lib ./host/bin/qemu-system-riscv64 -M virt -kernel fw_jump.elf -device loader,file=Image,addr=0x80200000 -append "rootwait root=/dev/vda ro" -drive file=rootfs.ext2,format=raw,id=hd0 -device virtio-blk-device,drive=hd0 -nographic -smp 4 -netdev tap,script=no,id=net0 -device virtio-net-device,netdev=net0;
-
-     * Configure tap device in your host
-     > sudo ifconfig tap0 192.168.101.200;
-
-     * Configure eth0 in qemu, run in qemu shell!
-     > ifconfig eth0 192.168.101.23;
-     > ping 192.168.101.200;
-
-
-## Run with Jtag on board
-   Preparation: 
-   * Board's serail interface is connected to PC/laptop by a serial cable;
-   * Board's jtag interface is connected to PC/laptop by jtag emulator(CKLink Lite).
-           
-   1. start minicom to connect board's serial port
-      - minicom -D /dev/ttyUSB0
-   2. start DebugServerConsole
-      - cd ./host/csky-debug
-      - sudo ./DebugServerConsole.elf
-   3. load vmlinux and run
-      - ./host/bin/csky-linux-gdb -x gdbinit vmlinux
-
-
-## How to build
-   1. git clone https://gitlab.com/c-sky/buildroot.git; 
-   2. cd buildroot;
-   3. make CONF=buildroot-config;  // buildroot-config can be found in 'configs' folder.
+## For below questions, Please refer to "buildroot-config/images/readme.txt" for details.       
+* How to quickly Start for qemu run
+* How to quickly copy app into qemu
+* How to enable qemu network
+* How to build linux kernel
+* How to build buildroot
 
 ## How to get the reference board
-    We will provide C610 as reference board. Before you apply please simulate the case pass in qemu and send the log or screenshot to us.
+    We will provide *** as reference board. Before you apply please simulate the case pass in qemu and send the log or screenshot to us.
     Everyone can apply from the url: ***
 
 ## Contact us
