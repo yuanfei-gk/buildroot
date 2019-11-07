@@ -41,24 +41,36 @@ When customizing Buildroot, one or more project-specific files need to be stored
  
  
 
-## Quick Start for qemu run
-  1. get toolchain
+## How to Quick Start for qemu run
+  1. download the necessary files
       * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/raw/output/images/toolchain_<buildroot-config>_<buildroot-version>.tar.xz;
+      > e.g. wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/340600736/artifacts/raw/output/images/toolchain_thead_910_compat_5.1_glibc_br_defconfig_7fa42f523167ede26f2162d61337b513bcecf2df.tar.xz;
   
-  2. get vmlinux
-      * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/raw/output/images/vmlinux.xz;
+      * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/file/output/images/Image.xz
+      > e.g. 
+      wget -nc  https://gitlab.com/c-sky/buildroot/-/jobs/340600736/artifacts/file/output/images/Image.xz
+      
+      * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/raw/output/images/fw_jump.elf
+      > e.g. 
+      wget -nc  https://gitlab.com/c-sky/buildroot/-/jobs/340600736/artifacts/raw/output/images/fw_jump.elf
+      
+      * wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/<buildroot-job_id>/artifacts/file/output/images/rootfs.ext2.xz
+      > e.g. 
+      wget -nc https://gitlab.com/c-sky/buildroot/-/jobs/340600736/artifacts/file/output/images/rootfs.ext2.xz
   
-  3. run in Qemu shell
+  2. run in Qemu shell
       * echo "Now let's run on qemu";
-      * xz -d vmlinux.xz;
       * mkdir host;
       * tar -Jxf toolchain_<buildroot-config>_<buildroot-version>.tar.xz -C host;
       * qemu_start_cmd;
-      (PS. Login with username "root", and no password)
+      > LD_LIBRARY_PATH=./host/lib ./host/bin/qemu-system-riscv64 -M virt -kernel fw_jump.elf -device loader,file=Image,addr=0x80200000 -append "rootwait root=/dev/vda ro" -drive file=rootfs.ext2,format=raw,id=hd0 -device virtio-blk-device,drive=hd0 -nographic -smp 4;  
+      > (PS. Login with username "root", and no password)
 
-  4. Enable qemu network
+  3. Enable qemu network    
      * Please use sudo privilege, becasue qemu will setup tap device in your host
      > sudo qemu_start_cmd -netdev tap,script=no,id=net0 -device virtio-net-device,netdev=net0;
+     e.g. 
+     sudo LD_LIBRARY_PATH=./host/lib ./host/bin/qemu-system-riscv64 -M virt -kernel fw_jump.elf -device loader,file=Image,addr=0x80200000 -append "rootwait root=/dev/vda ro" -drive file=rootfs.ext2,format=raw,id=hd0 -device virtio-blk-device,drive=hd0 -nographic -smp 4 -netdev tap,script=no,id=net0 -device virtio-net-device,netdev=net0;
 
      * Configure tap device in your host
      > sudo ifconfig tap0 192.168.101.200;
